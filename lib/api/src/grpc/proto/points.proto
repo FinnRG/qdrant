@@ -482,6 +482,7 @@ message FieldCondition {
   GeoBoundingBox geo_bounding_box = 4; // Check if points geolocation lies in a given area
   GeoRadius geo_radius = 5; // Check if geo point is within a given radius
   ValuesCount values_count = 6; // Check number of values for a specific field
+  Like like = 7;  // Check if point has field with a similiar text value
 }
 
 message Match {
@@ -527,6 +528,10 @@ message ValuesCount {
   optional uint64 gt = 2;
   optional uint64 gte = 3;
   optional uint64 lte = 4;
+}
+
+message Like {
+  string like = 1; // Match similiar keyword
 }
 
 // ---------------------------------------------

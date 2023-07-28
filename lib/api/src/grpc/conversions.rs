@@ -20,8 +20,8 @@ use crate::grpc::qdrant::with_payload_selector::SelectorOptions;
 use crate::grpc::qdrant::{
     with_vectors_selector, CollectionDescription, CollectionOperationResponse, Condition, Distance,
     FieldCondition, Filter, GeoBoundingBox, GeoPoint, GeoRadius, HasIdCondition, HealthCheckReply,
-    HnswConfigDiff, IsEmptyCondition, IsNullCondition, ListCollectionsResponse, ListValue, Match,
-    NamedVectors, NestedCondition, PayloadExcludeSelector, PayloadIncludeSelector,
+    HnswConfigDiff, IsEmptyCondition, IsNullCondition, Like, ListCollectionsResponse, ListValue,
+    Match, NamedVectors, NestedCondition, PayloadExcludeSelector, PayloadIncludeSelector,
     PayloadIndexParams, PayloadSchemaInfo, PayloadSchemaType, PointId, QuantizationConfig,
     QuantizationSearchParams, Range, RepeatedIntegers, RepeatedStrings, ScalarQuantization,
     ScoredPoint, SearchParams, Struct, TextIndexParams, TokenizerType, Value, ValuesCount, Vector,
@@ -794,6 +794,7 @@ impl TryFrom<FieldCondition> for segment::types::FieldCondition {
             geo_bounding_box,
             geo_radius,
             values_count,
+            like,
         } = value;
 
         let geo_bounding_box =
@@ -806,6 +807,7 @@ impl TryFrom<FieldCondition> for segment::types::FieldCondition {
             geo_bounding_box,
             geo_radius,
             values_count: values_count.map(|r| r.into()),
+            like: like.map(|l| l.into()),
         })
     }
 }
@@ -819,6 +821,7 @@ impl From<segment::types::FieldCondition> for FieldCondition {
             geo_bounding_box,
             geo_radius,
             values_count,
+            like,
         } = value;
 
         let geo_bounding_box = geo_bounding_box.map(|g| g.into());
@@ -830,6 +833,7 @@ impl From<segment::types::FieldCondition> for FieldCondition {
             geo_bounding_box,
             geo_radius,
             values_count: values_count.map(|r| r.into()),
+            like: like.map(|l| l.into()),
         }
     }
 }
@@ -1040,5 +1044,17 @@ pub fn from_grpc_dist(dist: i32) -> Result<segment::types::Distance, Status> {
             "Malformed distance parameter, unexpected value: {dist}"
         ))),
         Some(grpc_distance) => Ok(grpc_distance.try_into()?),
+    }
+}
+
+impl From<Like> for segment::types::Like {
+    fn from(value: Like) -> Self {
+        segment::types::Like { like: value.like }
+    }
+}
+
+impl From<segment::types::Like> for Like {
+    fn from(value: segment::types::Like) -> Self {
+        Like { like: value.like }
     }
 }

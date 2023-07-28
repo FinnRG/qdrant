@@ -3389,6 +3389,9 @@ pub struct FieldCondition {
     /// Check number of values for a specific field
     #[prost(message, optional, tag = "6")]
     pub values_count: ::core::option::Option<ValuesCount>,
+    /// Check if point has field with a similiar text value
+    #[prost(message, optional, tag = "7")]
+    pub like: ::core::option::Option<Like>,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3482,6 +3485,13 @@ pub struct ValuesCount {
     pub gte: ::core::option::Option<u64>,
     #[prost(uint64, optional, tag = "4")]
     pub lte: ::core::option::Option<u64>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Like {
+    /// Match similiar keyword
+    #[prost(string, tag = "1")]
+    pub like: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
